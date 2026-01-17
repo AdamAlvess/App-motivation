@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Quest</title>
+    <link rel="icon" type="image/x-icon" href="assets/logo.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="Css/style.css">
+</head>
+<body class="auth-page">
+    <div class="app-container">
+        <h1 class="game-title">NOUVEAU HÉROS</h1>
+        
+        <div class="glass-panel">
+            <div class="input-group">
+                <label>Pseudo (Unique)</label>
+                <input type="text" id="reg-pseudo">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div class="input-group">
+                    <label>Nom</label>
+                    <input type="text" id="reg-nom">
+                </div>
+                <div class="input-group">
+                    <label>Prénom</label>
+                    <input type="text" id="reg-prenom">
+                </div>
+                <div class="input-group">
+                    <label>Age</label>
+                    <input type="number" id="reg-age">
+                </div>
+                <div class="input-group">
+                    <label>Sexe</label>
+                    <select id="reg-sexe">
+                        <option value="H">Homme</option>
+                        <option value="F">Femme</option>
+                        <option value="A">Autre</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Taille (cm)</label>
+                    <input type="number" id="reg-taille">
+                </div>
+                <div class="input-group">
+                    <label>Poids (kg)</label>
+                    <input type="number" id="reg-poids">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Mot de passe</label>
+                <input type="password" id="reg-pass">
+            </div>
+
+            <button onclick="register()" class="btn-primary">COMMENCER L'AVENTURE</button>
+            <button class="btn-link" onclick="window.location.href='index.html'">Retour connexion</button>
+        </div>
+    </div>
+
+    <script>
+        async function register() {
+            const data = {
+                pseudo: document.getElementById('reg-pseudo').value,
+                nom: document.getElementById('reg-nom').value,
+                prenom: document.getElementById('reg-prenom').value,
+                age: document.getElementById('reg-age').value,
+                sexe: document.getElementById('reg-sexe').value,
+                taille: document.getElementById('reg-taille').value,
+                poids: document.getElementById('reg-poids').value,
+                password: document.getElementById('reg-pass').value
+            };
+
+            const res = await fetch('/api/signup', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+
+            const response = await res.json();
+            
+            if(response.success) {
+                localStorage.setItem('heroId', response.userId);
+                localStorage.setItem('heroName', response.pseudo);
+                window.location.href = 'dashboard.html';
+            } else {
+                alert("Erreur: " + response.message);
+            }
+        }
+    </script>
+</body>
+</html>

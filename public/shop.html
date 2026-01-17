@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Quest</title>
+    <link rel="icon" type="image/x-icon" href="assets/logo.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="Css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <div id="stats-header" class="hud-header"></div>
+
+        <div class="main-content">
+            <h2 style="color:var(--danger);">URGENCES</h2>
+            <div class="shop-item" style="border-color:var(--danger);" onclick="buyItem('Potion de Soin', 150, true)">
+                <span>🧪 Grande Potion (+50 PV)</span>
+                <span style="color:gold">150 🪙</span>
+            </div>
+            <p style="font-size:0.6rem; color:#666; margin-bottom: 30px; text-align: center;">
+                *Prix élevé pour punir l'échec. Soigne 50 PV.
+            </p>
+
+            <hr style="border-color:#333; margin: 20px 0;">
+
+            <h2>CRÉER UNE RÉCOMPENSE</h2>
+            <div class="glass-panel" style="padding:15px; margin-bottom:20px;">
+                <div class="input-group">
+                    <input type="text" id="s-name" placeholder="Nom (ex: Kebab, Ciné...)" style="margin-bottom:5px;">
+                </div>
+                <div class="input-group">
+                    <input type="number" id="s-price" placeholder="Prix en coins" style="margin-bottom:10px;">
+                </div>
+                <button onclick="createShopItem()" class="btn-secondary" style="margin-top:0;">+ AJOUTER AU STOCK</button>
+            </div>
+
+            <h2>MON STOCK PERSO</h2>
+            <div id="custom-shop-list">
+                </div>
+        </div>
+    </div>
+    <script src="Js/script.js"></script>
+</body>
+</html>

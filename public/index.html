@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Quest</title>
+    <link rel="icon" type="image/x-icon" href="assets/logo.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="Css/style.css">
+</head>
+<body class="auth-page">
+    <div class="app-container">
+        <h1 class="game-title">REAL QUEST</h1>
+        
+        <div class="glass-panel">
+            <h2>LOGIN</h2>
+            <div class="input-group">
+                <label>Pseudo</label>
+                <input type="text" id="login-pseudo" placeholder="Nom du Héros">
+            </div>
+            <div class="input-group">
+                <label>Mot de passe</label>
+                <input type="password" id="login-pass" placeholder="••••••••">
+            </div>
+            
+            <button onclick="login()" class="btn-primary">JOUER</button>
+            <button class="btn-link" onclick="window.location.href='signup.html'">Créer un nouveau héros</button>
+            
+            <p id="error-msg" style="color:var(--danger); margin-top:15px; font-size:0.8rem; text-align:center;"></p>
+        </div>
+    </div>
+
+    <script>
+        async function login() {
+            const pseudo = document.getElementById('login-pseudo').value;
+            const pass = document.getElementById('login-pass').value;
+
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ pseudo, password: pass })
+            });
+            
+            const data = await res.json();
+            if(data.success) {
+                localStorage.setItem('heroId', data.userId);
+                localStorage.setItem('heroName', data.pseudo);
+                window.location.href = 'dashboard.html';
+            } else {
+                document.getElementById('error-msg').innerText = data.message;
+            }
+        }
+    </script>
+</body>
+</html>

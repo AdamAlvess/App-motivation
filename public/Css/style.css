@@ -1,0 +1,293 @@
+/* =========================================
+   1. VARIABLES & RESET
+   ========================================= */
+:root {
+    --bg-dark: #0f0f13;
+    --card-bg: rgba(35, 35, 35, 0.85); /* Plus opaque pour la lisibilité */
+    --primary: #6c5ce7; /* Violet RPG */
+    --primary-glow: rgba(108, 92, 231, 0.5);
+    --accent: #ffd700; /* Or */
+    --danger: #ff4757; /* HP / Echec */
+    --success: #2ed573; /* XP / Validation */
+    --text: #ffffff;
+    --text-muted: #a0a0a0;
+    --font-main: 'Roboto', sans-serif;
+    --font-retro: 'Press Start 2P', cursive;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-dark);
+    background-image: radial-gradient(circle at 50% 30%, #2c2c3e 0%, #000000 90%);
+    background-attachment: fixed; /* Le fond reste fixe quand on scroll */
+    font-family: var(--font-main);
+    color: var(--text);
+    min-height: 100vh;
+    /* On retire le overflow:hidden pour permettre le scroll */
+}
+
+/* Conteneur principal qui simule un écran de téléphone sur PC */
+.app-container {
+    width: 100%;
+    max-width: 500px; /* Largeur max type mobile */
+    margin: 0 auto;
+    min-height: 100vh;
+    position: relative;
+    background: rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 50px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+}
+
+/* =========================================
+   2. TYPOGRAPHIE
+   ========================================= */
+h1, h2, h3 {
+    font-family: var(--font-retro);
+    color: var(--accent);
+    text-transform: uppercase;
+    text-shadow: 2px 2px 0px #000;
+    margin: 20px 0;
+    line-height: 1.4;
+}
+
+h1 { text-align: center; font-size: 1.5rem; color: var(--primary); }
+h2 { font-size: 1rem; border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 20px; }
+
+small { color: var(--text-muted); font-size: 0.8rem; }
+
+/* =========================================
+   3. ÉLÉMENTS D'INTERFACE (UI)
+   ========================================= */
+
+/* Panneaux vitrés (Glassmorphism) */
+.glass-panel {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid #444;
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+/* Champs de formulaire */
+.input-group { margin-bottom: 15px; }
+label { display: block; font-family: var(--font-retro); font-size: 0.6rem; color: var(--accent); margin-bottom: 8px; }
+
+input, select {
+    width: 100%;
+    padding: 15px;
+    background: #111;
+    border: 1px solid #444;
+    border-radius: 8px;
+    color: #fff;
+    font-family: var(--font-main); /* Plus lisible pour taper */
+    font-size: 1rem;
+    transition: 0.3s;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 10px var(--primary-glow);
+}
+
+/* Boutons */
+button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: var(--font-retro);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    position: relative;
+    top: 0;
+}
+
+button:active { top: 2px; }
+
+.btn-primary { 
+    background: linear-gradient(45deg, var(--primary), #8e44ad); 
+    color: white; 
+    box-shadow: 0 4px 0 #4834d4; 
+}
+.btn-secondary { background: #444; color: white; box-shadow: 0 4px 0 #222; }
+.btn-link { background: none; color: #aaa; box-shadow: none; font-family: var(--font-main); text-decoration: underline; font-size: 0.8rem; }
+
+/* =========================================
+   4. LAYOUT SPÉCIFIQUE : AUTH (Login/Signup)
+   ========================================= */
+/* Pour centrer verticalement uniquement sur les pages de login */
+body.auth-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body.auth-page .app-container {
+    min-height: auto; /* Pas besoin de toute la hauteur */
+    background: transparent;
+    box-shadow: none;
+    justify-content: center;
+}
+
+/* =========================================
+   5. LAYOUT SPÉCIFIQUE : JEU (HUD & NAV)
+   ========================================= */
+
+/* Header (Stats) fixe en haut */
+.hud-header {
+    background: rgba(15, 15, 19, 0.95);
+    border-bottom: 1px solid #333;
+    padding: 12px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+.stat-box {
+    font-family: var(--font-retro);
+    font-size: 0.65rem;
+    background: #222;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #444;
+}
+
+/* Zone de contenu principale (pour que ça ne passe pas sous la nav) */
+.main-content {
+    flex: 1; /* Prend toute la place dispo */
+    padding: 20px;
+    padding-bottom: 90px; /* IMPORTANT : Place pour la barre du bas */
+    overflow-y: auto; /* Permet le scroll interne si besoin */
+}
+
+/* Barre de navigation fixe en bas */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%); /* Centré par rapport à l'écran */
+    width: 100%;
+    max-width: 500px;
+    background: #1a1a1a;
+    border-top: 2px solid var(--primary);
+    display: flex;
+    justify-content: space-around;
+    padding: 15px 0;
+    z-index: 1000;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+}
+
+.bottom-nav a {
+    color: #888;
+    text-decoration: none;
+    font-size: 0.6rem;
+    font-family: var(--font-retro);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    transition: 0.3s;
+}
+
+.bottom-nav a:hover, .bottom-nav a.active {
+    color: var(--accent);
+    text-shadow: 0 0 5px var(--accent);
+}
+
+/* =========================================
+   6. ÉLÉMENTS DU JEU (Cartes & Boutique)
+   ========================================= */
+
+/* Cartes de Mission */
+.task-card {
+    background: #252525;
+    border: 1px solid #444;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.2s;
+    box-shadow: 0 4px 0 #111;
+}
+
+.task-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+
+.task-info h3 { 
+    margin: 0 0 5px 0; 
+    font-size: 0.9rem; 
+    font-family: var(--font-main); 
+    font-weight: bold; 
+}
+.task-info small { display: block; margin-top: 4px; }
+
+/* Couleurs selon le type */
+.type-journaliere { border-left: 6px solid #3498db; }
+.type-hebdo { border-left: 6px solid #9b59b6; }
+.type-defi { border-left: 6px solid #e74c3c; }
+.type-but { border-left: 6px solid #f1c40f; }
+
+/* Boutons d'action ronds */
+.task-actions { display: flex; gap: 10px; }
+.task-actions button {
+    width: 42px; height: 42px;
+    padding: 0; margin: 0;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 3px 0 rgba(0,0,0,0.5);
+}
+.btn-check { background: var(--success); color: #000; }
+.btn-fail { background: var(--danger); color: #fff; }
+
+/* Boutique */
+.shop-item {
+    background: linear-gradient(to right, #252525, #2a2a2a);
+    padding: 20px;
+    border: 1px solid #444;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.shop-item:hover { border-color: var(--accent); box-shadow: 0 0 15px rgba(255, 215, 0, 0.1); }
+.shop-item span:first-child { font-weight: bold; font-size: 0.9rem; }
+.shop-item span:last-child { font-family: var(--font-retro); color: var(--accent); font-size: 0.8rem; }
+
+/* Barre de progression PV */
+.hp-container {
+    background: #333;
+    height: 10px;
+    width: 100px;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 5px;
+}
+.hp-fill {
+    height: 100%;
+    background: var(--danger);
+    width: 100%; /* Sera changé en JS */
+    transition: width 0.5s;
+}

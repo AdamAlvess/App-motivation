@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Quest</title>
+    <link rel="icon" type="image/x-icon" href="assets/logo.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="Css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <div id="stats-header" class="hud-header"></div>
+        
+        <div class="main-content">
+            <h2>MON PROFIL</h2>
+            
+            <div class="glass-panel" style="text-align: center;">
+                <div style="font-size: 3rem; margin-bottom: 10px;">👤</div>
+                <h3 id="p-name" style="color:var(--primary); margin:0;">...</h3>
+                <p style="color:#666; font-size: 0.8rem; margin-top:5px;">Héros légendaire</p>
+                
+                <hr style="border-color:#333; margin: 20px 0;">
+                
+                <p style="font-size: 0.8rem; line-height: 1.6;">
+                    Continue tes efforts pour monter de niveau et débloquer plus de puissance !
+                </p>
+
+                <button onclick="logout()" style="background:var(--danger); margin-top:30px;">SE DÉCONNECTER</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('p-name').innerText = localStorage.getItem('heroName');
+        
+        function logout() {
+            localStorage.clear();
+            window.location.href='index.html';
+        }
+    </script>
+    <script src="Js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Quest</title>
+    <link rel="icon" type="image/x-icon" href="assets/logo.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="Css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="main-content">
+            <h2>NOUVEL OBJECTIF</h2>
+            
+            <div class="glass-panel">
+                <div class="input-group">
+                    <label>Titre de la quête</label>
+                    <input type="text" id="t-name" placeholder="Ex: Courir 5km, Finir le dossier...">
+                </div>
+
+                <div class="input-group">
+                    <label>Type de mission</label>
+                    <select id="t-type">
+                        <option value="journaliere">Journalière (Série bonus)</option>
+                        <option value="hebdo">Hebdomadaire</option>
+                        <option value="mensuel">Mensuel</option>
+                        <option value="unique">Tâche Unique</option>
+                        <option value="but">But à atteindre</option>
+                        <option value="defi">Défi</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Difficulté & Gains</label>
+                    <select id="t-diff">
+                        <option value="1">Nv 1 (Facile - 1 à 2 coins)</option>
+                        <option value="2">Nv 2 (2 à 3 coins)</option>
+                        <option value="3">Nv 3 (3 à 5 coins)</option>
+                        <option value="4">Nv 4 (5 à 8 coins)</option>
+                        <option value="5">Nv 5 (8 à 12 coins)</option>
+                        <option value="6">Nv 6 (12 à 20 coins)</option>
+                        <option value="7">Nv 7 (20 à 40 coins)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Risque (Malus si échec)</label>
+                    <select id="t-malus">
+                        <option value="1">Nv 1 (-1 PV)</option>
+                        <option value="2">Nv 2 (-3 PV)</option>
+                        <option value="3">Nv 3 (-5 PV)</option>
+                        <option value="4">Nv 4 (-10 PV)</option>
+                        <option value="5">Nv 5 (-25 PV)</option>
+                        <option value="6">Nv 6 (-50 PV)</option>
+                        <option value="7">Nv 7 (-75 PV)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Date limite (Optionnel)</label>
+                    <input type="date" id="t-date">
+                </div>
+
+                <button onclick="createTask()" class="btn-primary">VALIDER LA MISSION</button>
+            </div>
+        </div>
+    </div>
+    <script src="Js/script.js"></script>
+</body>
+</html>
