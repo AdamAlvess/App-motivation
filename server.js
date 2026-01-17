@@ -2,20 +2,27 @@ const express = require('express');
 const admin = require('firebase-admin');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
-
-const express = require('express');
-const admin = require('firebase-admin');
-const bodyParser = require('body-parser');
-const crypto = require('crypto');
+// Charge les variables d'environnement (pour le local).
+// Sur Render, cela ne fera rien car les variables sont dans le dashboard, ce qui est parfait.
 require('dotenv').config();
 
+const app = express();
+
+// --- CONFIGURATION FIREBASE SECURISEE ---
 const serviceAccount = {
   "type": "service_account",
   "project_id": process.env.FIREBASE_PROJECT_ID,
   "private_key_id": process.env.FIREBASE_PRIVATE_KEY_ID,
+  // Cette ligne est CRUCIALE pour Render : elle convertit les '\n' écrits en texte en vrais sauts de ligne
   "private_key": process.env.FIREBASE_PRIVATE_KEY ? process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n') : undefined,
   "client_email": process.env.FIREBASE_CLIENT_EMAIL,
 };
+
+// Vérification de sécurité pour éviter que le serveur démarre sans clé
+if (!serviceAccount.private_key) {
+    console.error("❌ ERREUR FATALE : La clé privée Firebase est manquante ! Vérifie tes variables d'environnement.");
+    // On ne stoppe pas le processus ici pour laisser Render afficher les logs, mais l'app ne marchera pas sans la clé.
+}
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -23,7 +30,6 @@ admin.initializeApp({
 });
 
 const db = admin.database();
-const app = express();
 
 app.use(bodyParser.json());
 app.use(express.static('public'));
@@ -98,26 +104,36 @@ app.post('/api/login', async (req, res) => {
 
 // 3. Récupérer Infos
 app.get('/api/user/:id', async (req, res) => {
-    const s = await db.ref('users/' + req.params.id).once('value');
-    if (s.exists()) {
-        res.json({success: true, user: s.val()});
-    } else {
-        res.json({success: false, message: "Utilisateur introuvable"});
+    try {
+        const s = await db.ref('users/' + req.params.id).once('value');
+        if (s.exists()) {
+            res.json({success: true, user: s.val()});
+        } else {
+            res.json({success: false, message: "Utilisateur introuvable"});
+        }
+    } catch (e) {
+        console.error(e);
+        res.json({success:false, message: "Erreur serveur"});
     }
 });
 
 // 4. Créer Tâche
 app.post('/api/create-task', async (req, res) => {
-    const { userId, name, type, difficulty, malusLevel, deadline } = req.body;
-    const newTask = {
-        name, type, 
-        difficulty: parseInt(difficulty), 
-        malusLevel: parseInt(malusLevel),
-        deadline: deadline || null,
-        streak: 0, completed: false, createdAt: Date.now()
-    };
-    await db.ref(`users/${userId}/tasks`).push(newTask);
-    res.json({ success: true });
+    try {
+        const { userId, name, type, difficulty, malusLevel, deadline } = req.body;
+        const newTask = {
+            name, type, 
+            difficulty: parseInt(difficulty), 
+            malusLevel: parseInt(malusLevel),
+            deadline: deadline || null,
+            streak: 0, completed: false, createdAt: Date.now()
+        };
+        await db.ref(`users/${userId}/tasks`).push(newTask);
+        res.json({ success: true });
+    } catch (e) {
+        console.error(e);
+        res.json({success:false, message: "Erreur création tâche"});
+    }
 });
 
 // 5. Valider Tâche (Succès)
@@ -174,7 +190,7 @@ app.post('/api/complete-task', async (req, res) => {
     }
 });
 
-// 6. Échec Tâche (C'est ici que tu avais le problème)
+// 6. Échec Tâche
 app.post('/api/fail-task', async (req, res) => {
     try {
         const { userId, taskId } = req.body;
@@ -295,10 +311,11 @@ setInterval(async () => {
     }
 }, 60 * 1000); 
 
-// Démarrage
-app.listen(3000, () => {
+// --- DÉMARRAGE DU SERVEUR ---
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
     console.log('-------------------------------------------');
-    console.log('✅ Real Quest Server est EN LIGNE !');
-    console.log('💻 http://localhost:3000');
+    console.log(`✅ Real Quest Server est EN LIGNE sur le port ${PORT} !`);
     console.log('-------------------------------------------');
 });
