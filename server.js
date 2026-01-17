@@ -64,22 +64,38 @@ function getRandomCoin(min, max) {
 // 1. Inscription
 app.post('/api/signup', async (req, res) => {
     try {
-        const { pseudo, password, infos } = req.body;
+        // On récupère les champs individuels envoyés par le formulaire HTML
+        const { pseudo, password, nom, prenom, age, sexe, taille, poids } = req.body;
+        
         const ref = db.ref('users');
         const snap = await ref.orderByChild('pseudo').equalTo(pseudo).once('value');
         
         if(snap.exists()) return res.json({success:false, message:"Pseudo pris"});
         
         const newUserRef = ref.push();
+        
+        // On construit l'objet final pour la base de données
+        // On ajoute "|| ''" pour éviter les 'undefined' si un champ est vide
         await newUserRef.set({
-            pseudo, password: hashPassword(password), infos,
+            pseudo, 
+            password: hashPassword(password), 
+            infos: {
+                nom: nom || "",
+                prenom: prenom || "",
+                age: age || "",
+                sexe: sexe || "A",
+                taille: taille || "",
+                poids: poids || ""
+            },
             stats: { hp: 100, maxHp: 100, xp: 0, level: 1, coins: 0, rubies: 0 },
-            tasks: [], shop: []
+            tasks: [], 
+            shop: []
         });
+        
         res.json({success:true, userId: newUserRef.key, pseudo});
     } catch (e) {
-        console.error(e);
-        res.json({success:false, message: "Erreur serveur"});
+        console.error("Erreur Inscription:", e);
+        res.json({success:false, message: "Erreur serveur lors de l'inscription"});
     }
 });
 
